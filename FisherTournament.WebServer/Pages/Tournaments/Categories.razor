@@ -13,12 +13,12 @@
 
 <FluentGrid>
     <FluentGridItem sm="12" md="6">
-        <h1 class="page-title-no-pt">Categorias</h1>
+        <h1 class="page-title-no-pt">Categories</h1>
     </FluentGridItem>
 
     <FluentGridItem sm="12" md="6" Class="flex justify-end">
-        <FluentSwitch Value="@_canEdit" @onchange=OnToggleCanEdit title="Editar">
-            <span class="label">Editar</span>
+        <FluentSwitch Value="@_canEdit" @onchange=OnToggleCanEdit title="Edit">
+            <span class="label">Edit</span>
             <span slot="unchecked-message">
                 <FluentIcon class="align-middle" Icon="Icons.Regular.Size20.LockClosed" Color="Color.Neutral" />
             </span>
@@ -32,38 +32,38 @@
 
 <FluentDataGrid Items="@cats">
     <ChildContent>
-        <TemplateColumn Title="Categoría">
-            @if(_canEdit){
-		    <FluentTextField 
-                Value="@context.Name"
-                ValueChanged="@((v) => OnNameChanged(context.Name, context, v))"
-                tabindex="@(GetCatIndex(context)+1)" />
+        <TemplateColumn Title="Category">
+            @if (_canEdit)
+            {
+                <FluentTextField Value="@context.Name"
+                                 ValueChanged="@((v) => OnNameChanged(context.Name, context, v))"
+                                 tabindex="@(GetCatIndex(context)+1)" />
             } else
             {
                 <FluentLabel class="p-1">@context.Name</FluentLabel>
             }
         </TemplateColumn>
-        
+
         @*
-        <TemplateColumn Title="Edad límite">
-            <div class="flex flex-row">
-                <FluentNumberField 
-                    Value="context.minAge"
-                    @onchange="@(v => OnMinAgeChanged(context, v))"
-                    tabindex="@(GetCatIndex(context)+2)" />
-                <span      
-                    class="flex flex-col justify-center mx-3 color-fg">
-                    hasta
-                </span>
-                <FluentNumberField 
-                    Value="context.MaxAge"
-                    @onchange="@(v => OnMaxAgeChanged(context, v))"
-                    tabindex="@(GetCatIndex(context)+3)" />
-            </div>
+        <TemplateColumn Title="Age limit">
+        <div class="flex flex-row">
+        <FluentNumberField
+        Value="context.minAge"
+        @onchange="@(v => OnMinAgeChanged(context, v))"
+        tabindex="@(GetCatIndex(context)+2)" />
+        <span
+        class="flex flex-col justify-center mx-3 color-fg">
+        to
+        </span>
+        <FluentNumberField
+        Value="context.MaxAge"
+        @onchange="@(v => OnMaxAgeChanged(context, v))"
+        tabindex="@(GetCatIndex(context)+3)" />
+        </div>
         </TemplateColumn>
         *@
 
-        <TemplateColumn Title="Acciones" Align="@Align.End">
+        <TemplateColumn Title="Actions" Align="@Align.End">
             <FluentButton IconEnd="@(new Icons.Regular.Size24.Delete().WithColor("red"))" Disabled=!_canEdit OnClick="@(() => Delete(context))" />
         </TemplateColumn>
     </ChildContent>
@@ -73,7 +73,7 @@
         {
             <div Style="min-height: 300px;" class="flex items-center empty-content pt-4">
                 <FluentIcon Icon="Icons.Regular.Size24.Warning" Color="@Color.Accent" />
-                &nbsp; No se encontraron categorías.
+                &nbsp; No categories found.
             </div>
         }
     </EmptyContent>
@@ -84,7 +84,7 @@
     <div class="dashed-rect cursor-pointer"
     @onclick="@(v => OnNewCategoryClicked())">
         <FluentIcon Icon="Icons.Regular.Size24.Add" Color="@Color.Accent" />
-        <span class="color-fg">Nueva categoría</span>
+        <span class="color-fg">New category</span>
     </div>
 }
 
@@ -128,14 +128,14 @@
     Task OnMinAgeChanged(GetTournamentCategoriesQueryResult context, ChangeEventArgs value)
     {
         _toastService.ClearSuccessToasts();
-        _toastService.ShowSuccess($"Cambio guardado", 1);
+        _toastService.ShowSuccess($"Change saved", 1);
         return Task.CompletedTask;
     }
 
     Task OnMaxAgeChanged(GetTournamentCategoriesQueryResult context, ChangeEventArgs value)
     {
         _toastService.ClearSuccessToasts();
-        _toastService.ShowSuccess($"Cambio guardado", 1);
+        _toastService.ShowSuccess($"Change saved", 1);
         return Task.CompletedTask;
     }
 
@@ -165,7 +165,7 @@
         {
             categoryRef.Name = newName;
             _toastService.ClearSuccessToasts();
-            _toastService.ShowSuccess($"Cambio guardado", 1);        
+            _toastService.ShowSuccess($"Change saved", 1);
         }
     }
 
@@ -193,30 +193,30 @@
             categoryRef.Name = prevName;
         } else
         {
-//            categoryRef.Name = newName;
+            //            categoryRef.Name = newName;
             await GetCategories();
             _toastService.ClearSuccessToasts();
-            _toastService.ShowSuccess($"Cambio guardado", 1);
+            _toastService.ShowSuccess($"Change saved", 1);
         }
     }
 
     async Task OnNewCategoryClicked()
     {
-        var command = new AddCategoryCommand(TournamentId, "Nueva categoria");
+        var command = new AddCategoryCommand(TournamentId, "New category");
         var res = await _sender.Send(command);
 
         if (res.IsError)
-		{
-			_toastService.ShowErrors(res.Errors);
-		} else
-		{
-			await GetCategories();
-		}
+        {
+            _toastService.ShowErrors(res.Errors);
+        } else
+        {
+            await GetCategories();
+        }
     }
 
     async Task Delete(GetTournamentCategoriesQueryResult context)
-	{
-		var command = new DeleteCategoryCommand(TournamentId, context.Id);
+    {
+        var command = new DeleteCategoryCommand(TournamentId, context.Id);
         var res = await _sender.Send(command);
 
         if (res.IsError)
@@ -225,18 +225,18 @@
         } else
         {
             _toastService.ClearSuccessToasts();
-            _toastService.ShowSuccess($"Categoría eliminada", 1);
+            _toastService.ShowSuccess($"Category deleted", 1);
             await GetCategories();
         }
-	}
+    }
 
     void OnToggleCanEdit()
-	{
-		_canEdit = !_canEdit;
-	}
+    {
+        _canEdit = !_canEdit;
+    }
 
     int GetCatIndex(GetTournamentCategoriesQueryResult context)
-	{
-		return cats.ToList().FindIndex(c => c.Id == context.Id);
-	}
+    {
+        return cats.ToList().FindIndex(c => c.Id == context.Id);
+    }
 }

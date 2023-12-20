@@ -17,7 +17,7 @@
 @inject IMapper _mapper
 
 <EditForm class="relative h-full" EditContext="_editContext" OnSubmit="Submit">
-	<h1 class="page-title-no-pt">Editar Competición</h1>
+	<h1 class="page-title-no-pt">Edit Competition</h1>
 
 	<p class="m-0 color-fg"></p>
 	<FluentDivider class="mt-1 mb-4" />
@@ -25,9 +25,9 @@
 	<div class="flex flex-col items-start gap-y-5">
 		<div>
 			<FluentDatePicker @bind-Value="@SelectedDate">
-				@* TODO: No deberia ser simplemente fecha de la competencia? *@
+				@* TODO: Shouldn't it just be competition date? *@
 				<LabelTemplate>
-					Fecha de Inicio <span class="red">*</span>
+					Start Date <span class="red">*</span>
 				</LabelTemplate>
 			</FluentDatePicker>
 			<FluentTimePicker @bind-Value="@SelectedDate" Label="" />
@@ -40,27 +40,26 @@
 				<div>
 					<FluentDatePicker @bind-Value="@EndDate" Disabled="true">
 						<LabelTemplate>
-							Fecha de Fin
+							End Date
 						</LabelTemplate>
 					</FluentDatePicker>
 				</div>
 
-				<FluentCheckbox
-					class="pb-2"
-					@bind-Value="@EndCompetitionFlag">Marcar como sin finalizar</FluentCheckbox>
+				<FluentCheckbox class="pb-2"
+				@bind-Value="@EndCompetitionFlag">Mark as unfinished</FluentCheckbox>
 			</div>
 		} else
 		{
 			<div class="flex flex-row gap-x-5 items-end">
 				<div>
-					<FluentTextField Value="Sin finalizar" Disabled="true" Appearance="FluentInputAppearance.Outline">
+					<FluentTextField Value="Unfinished" Disabled="true" Appearance="FluentInputAppearance.Outline">
 						<LabelTemplate>
-							Fecha de Fin
+							End Date
 						</LabelTemplate>
 					</FluentTextField>
 				</div>
 
-				<FluentCheckbox class="pb-2" @bind-Value="@EndCompetitionFlag">Marcar como finalizada</FluentCheckbox>
+				<FluentCheckbox class="pb-2" @bind-Value="@EndCompetitionFlag">Mark as finished</FluentCheckbox>
 			</div>
 		}
 		<ValidationMessage For="() => Model!.CompetitionFinishedState" />
@@ -69,34 +68,32 @@
 
 	<FluentGrid Class="items-end">
 		<FluentGridItem sm="12" md="6">
-			<p class="m-0 mt-16 color-fg">Lugar de la competencia</p>
+			<p class="m-0 mt-16 color-fg">Competition Location</p>
 		</FluentGridItem>
 
 		<FluentGridItem sm="12" md="6" Class="flex justify-end">
-		
+
 		</FluentGridItem>
 	</FluentGrid>
 	<FluentDivider class="mt-1 mb-4" />
 
 	<div class="flex flex-row justify-evenly w-full">
 		<div>
-			<FluentTextField
-				AutoComplete="off"
-				@bind-Value=Place>
-				Direccion/Nombre del lugar
+			<FluentTextField AutoComplete="off"
+			@bind-Value=Place>
+				Address/Place Name
 				&nbsp;&nbsp;&nbsp;
-				<FluentBadge Appearance="Appearance.Neutral" Fill="lowlight" BackgroundColor="#000" Color="#fff">Opcional</FluentBadge>
+				<FluentBadge Appearance="Appearance.Neutral" Fill="lowlight" BackgroundColor="#000" Color="#fff">Optional</FluentBadge>
 			</FluentTextField>
 			<ValidationMessage For="() => Model!.Location" />
 		</div>
 	</div>
 
 	<div class="absolute bottom-0 mb-4 mt-6 flex flex-row w-full justify-center gap-24">
-		<FluentButton Appearance="Appearance.Stealth" OnClick="Cancel">Cancelar</FluentButton>
-		<FluentButton 
-				IconStart="@(new Icons.Regular.Size16.Checkmark())" 
-				Appearance="Appearance.Accent"
-				Type="ButtonType.Submit">Guardar</FluentButton>
+		<FluentButton Appearance="Appearance.Stealth" OnClick="Cancel">Cancel</FluentButton>
+		<FluentButton IconStart="@(new Icons.Regular.Size16.Checkmark())"
+					  Appearance="Appearance.Accent"
+					  Type="ButtonType.Submit">Save</FluentButton>
 	</div>
 </EditForm>
 
@@ -111,7 +108,8 @@
 
 	EditCompetitionRequest Model { get; set; } = default!;
 
-	private DateTime? SelectedDate { 
+	private DateTime? SelectedDate
+	{
 		get
 		{
 			return (Model.StartDateTime ?? competition.StartDateTime).ToLocalTime();
@@ -119,7 +117,8 @@
 
 		set
 		{
-			if (value is not null) {
+			if (value is not null)
+			{
 				Model.StartDateTime = value.Value.ToUniversalTime();
 			}
 		}
@@ -139,35 +138,40 @@
 		}
 	}
 
-	private string Place {
+	private string Place
+	{
 		// TODO: Use separate fields for city, state, etc
 
-		get {
+		get
+		{
 			return Model.Location is null ? GetInlineLocation(competition) : GetInlineLocation(Model);
 		}
 
-		set {
-			if (Model.Location is null) {
+		set
+		{
+			if (Model.Location is null)
+			{
 				Model.Location = new()
-				{
-					City = competition.Location.City,
-					State = competition.Location.State,
-					Country = competition.Location.Country,
-					Place = competition.Location.Place
-				};
+					{
+						City = competition.Location.City,
+						State = competition.Location.State,
+						Country = competition.Location.Country,
+						Place = competition.Location.Place
+					};
 			}
 
 			Model.Location.Place = value;
 		}
 	}
 
-	DateTime? EndDate { 
-		get 
+	DateTime? EndDate
+	{
+		get
 		{
 			return competition.EndDateTime;
 		}
 
-		set {}
+		set { }
 	}
 
 	EditContext _editContext = default!;
@@ -182,9 +186,10 @@
 		var query = new GetCompetitionQuery(CompetitionId);
 		var result = await _sender.Send(query);
 
-		if (result.IsError) {			
+		if (result.IsError)
+		{
 			_toastService.ShowErrors(result.Errors);
-			_shouldExit = true; 
+			_shouldExit = true;
 		}
 
 		competition = result.Value;
@@ -216,10 +221,9 @@
 		if (res.IsError)
 		{
 			_editContext.AddValidationErrors(res.Errors, _validationMessageStore, Model, _toastService);
-		}
-		else
+		} else
 		{
-			_toastService.ShowSuccess("Competición editada");
+			_toastService.ShowSuccess("Competition edited");
 			await _js.GoBack();
 		}
 

@@ -16,45 +16,45 @@
 
 <EditForm EditContext="@editContext" class="flex flex-col justify-between h-full" >
     <div>
-        <h1 class="page-title-no-pt">Torneo</h1>
+        <h1 class="page-title-no-pt">Tournament</h1>
 
         <FluentStack Orientation="Orientation.Vertical" Class="pt-4" VerticalGap="25">
             <FluentGrid Spacing="3">
                 <FluentGridItem sm="12">
-                    <FluentLabel Typo="Typography.Subject" Color="Color.Disabled">Información general</FluentLabel>
+                    <FluentLabel Typo="Typography.Subject" Color="Color.Disabled">General Information</FluentLabel>
                 </FluentGridItem>
 
                 <FluentGridItem sm="12" md="5">
                     <FluentTextField AutoComplete="off" Required="true" class="w-full" @bind-Value=@TournamentName>
-                        Nombre del torneo
+                        Tournament Name
                     </FluentTextField>
                     <ValidationMessage For="() => Model!.Name" />
                 </FluentGridItem>
                 <FluentGridItem sm="12" md="5">
-                    @* <FluentDatePicker class="w-full" Required="true" @bind-Value=StartDate AriaLabel="Fecha inicio" Label="Fecha inicio" /> *@
+                    @* <FluentDatePicker class="w-full" Required="true" @bind-Value=StartDate AriaLabel="Start Date" Label="Start Date" /> *@
                     <FluentTextField class="w-full" AutoComplete="off" @bind-Value=StartDate Required="false" Placeholder="01/12/1997">
                         <FluentIcon Value="@(new Icons.Regular.Size16.Calendar())" Slot="start" />
-                        Fecha inicio
+                        Start Date
                     </FluentTextField>
                     <ValidationMessage For="() => Model!.StartDate" />
                 </FluentGridItem>
 
                 <FluentGridItem sm="12">
-                    <FluentLabel Typo="Typography.Subject" Color="Color.Disabled">Estado</FluentLabel>
+                    <FluentLabel Typo="Typography.Subject" Color="Color.Disabled">Status</FluentLabel>
                 </FluentGridItem>
 
                 <FluentGridItem sm="12" md="5">
-                    <p class="color-fg">Fecha finalizado</p>
+                    <p class="color-fg">End Date</p>
                     <FluentStack Orientation="Orientation.Horizontal" VerticalAlignment="VerticalAlignment.Center">
-			            @if (_endDate is not null)
+                        @if (_endDate is not null)
                         {
                             <p class="m-0">@_endDate.Value.ToString(CultureInfo.CurrentCulture.DateTimeFormat.ShortDatePattern)</p>
-                            <FluentButton OnClick="async () => await SetTournamentEnded(false)">Deshacer finalización</FluentButton>
+                            <FluentButton OnClick="async () => await SetTournamentEnded(false)">Undo End</FluentButton>
                         }
                         else
                         {
-                            <p class="m-0">Sin finalizar</p>
-                            <FluentButton OnClick="async () => await SetTournamentEnded(true)">Finalizar</FluentButton>
+                            <p class="m-0">Not Ended</p>
+                            <FluentButton OnClick="async () => await SetTournamentEnded(true)">End</FluentButton>
                         }
                     </FluentStack>
 
@@ -65,9 +65,10 @@
     </div>
 
     <div class="flex justify-between mb-6">
-        <FluentButton IconStart="@(new Icons.Regular.Size16.Delete())" OnClick="DeleteTournament">Eliminar</FluentButton>
+        <FluentButton IconStart="@(new Icons.Regular.Size16.Delete())" OnClick="DeleteTournament">Delete</FluentButton>
     </div>
 </EditForm>
+
 
 
 @code {
@@ -167,7 +168,7 @@
             editContext?.AddValidationErrors(res.Errors, messageStore, Model, _toastService);            
         } else
         {
-            _toastService.ShowSuccess($"Editado correctamente");
+            _toastService.ShowSuccess($"Edited");
 
             ChangedTournamentName?.Invoke(Model.Name);
         }
@@ -187,7 +188,7 @@
             _toastService.ShowErrors(res.Errors);
         } else
         {
-            _toastService.ShowSuccess($"Torneo eliminado.");
+            _toastService.ShowSuccess($"Deleted.");
 
             _nav.NavigateTo("/");
         }

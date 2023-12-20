@@ -69,7 +69,6 @@ using (var scope = app.Services.CreateScope())
     dbMain.Database.EnsureCreated();
 }
 
-
 /*
 public static void ApplyMigrations(this IApplicationBuilder app)
 {

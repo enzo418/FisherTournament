@@ -13,28 +13,28 @@
 
 <div class="px-4" style="height: 80%">
     <div class="flex flex-row w-full items-center justify-between">
-        <h1 class="page-title">Agregar Pescador</h1>
+        <h1 class="page-title">Add Fisher</h1>
 
-        <FluentSwitch @bind-Value="@_exitOnSave" Label="Volver al guardar" />
+        <FluentSwitch @bind-Value="@_exitOnSave" Label="Return on save" />
     </div>
 
     <EditForm EditContext="@editContext" OnSubmit="@Submit" class="relative h-full">
         <div class="flex justify-center gap-20 pt-7">
             <div class="flex flex-col gap-10 justify-normal">
                 <div>
-                    <span class="text-sm">Información Personal</span>
+                    <span class="text-sm">Personal Information</span>
                     <FluentDivider Style="width: 100%;" Role="DividerRole.Presentation" />
                 </div>
 
                 <p>
                     <FluentTextField AutoComplete="off" Autofocus="true" @bind-Value="@Model.FirstName" @ref=_txtNameRef Required="true">
-                        Nombre <span class="red">*</span>
+                        First Name <span class="red">*</span>
                     </FluentTextField>
                     <ValidationMessage For="() => Model!.FirstName" />
                 </p>
 
                 <p>
-                    <FluentTextField AutoComplete="off" @bind-Value="@Model.LastName" Required="true">Apellido <span class="red">*</span>
+                    <FluentTextField AutoComplete="off" @bind-Value="@Model.LastName" Required="true">Last Name <span class="red">*</span>
                     </FluentTextField>
                     <ValidationMessage For="() => Model!.LastName" />
                 </p>
@@ -49,14 +49,14 @@
 
             <div class="flex flex-col gap-10 justify-normal">
                 <div>
-                    <span class="text-sm">Opcional</span>
+                    <span class="text-sm">Optional</span>
                     <FluentDivider Style="width: 100%;" Role="DividerRole.Presentation" />
                 </div>
 
                 <p>
                     <FluentTextField AutoComplete="off" @bind-Value=date Required="false" Placeholder="01/12/1997"
                         Pattern="^(0[1-9]|[12][0-9]|3[01])/(0[1-9]|1[0-2])/\d{4}$">
-                        Fecha nacimiento
+                        Date of Birth
                     </FluentTextField>
                 <p class="error @dateValidationClasses">@dateValidationError</p>
                 </p>
@@ -64,13 +64,11 @@
         </div>
 
         <div class="absolute bottom-0 m-auto flex columns-2 gap-28 w-full place-content-center">
-            <FluentButton Appearance="Appearance.Stealth" @onclick=OnCancel>@(editContext.IsModified() ? "Cancelar" : "Volver")</FluentButton>
-            <FluentButton Type=ButtonType.Submit Appearance="Appearance.Accent">Guardar</FluentButton>
+            <FluentButton Appearance="Appearance.Stealth" @onclick=OnCancel>@(editContext.IsModified() ? "Cancel" : "Return")</FluentButton>
+            <FluentButton Type=ButtonType.Submit Appearance="Appearance.Accent">Save</FluentButton>
         </div>
     </EditForm>
 </div>
-
-
 
 @code {
     string? date = "";
@@ -101,7 +99,7 @@
     {
         if (!DateTime.TryParseExact(e.Value?.ToString(), CultureInfo.CurrentCulture.DateTimeFormat.ShortDatePattern, null, System.Globalization.DateTimeStyles.None, out _))
         {
-            dateValidationError = "Formato de fecha inválido";
+            dateValidationError = "Invalid date format";
             dateValidationClasses = "";
         }
         else
@@ -132,7 +130,7 @@
         }
         else
         {
-            _toastService.ShowSuccess($"Agregado pescador {Model.FirstName} {Model.LastName}");
+            _toastService.ShowSuccess($"Fisher {Model.FirstName} {Model.LastName} added");
 
             if (_exitOnSave) { 
                 await JSRuntime.GoBack();

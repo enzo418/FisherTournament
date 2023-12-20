@@ -12,13 +12,13 @@
 
 <FluentGrid>
     <FluentGridItem sm="12" md="6">
-        <h1 class="page-title-no-pt">Competiciones</h1>
+        <h1 class="page-title-no-pt">Competitions</h1>
     </FluentGridItem>
 
     <FluentGridItem sm="12" md="6" Class="flex justify-end">
         <FluentButton Appearance="Appearance.Accent"
                       IconStart="@(new Icons.Regular.Size16.Add())"
-                      OnClick="@(() => _nav.NavigateTo($"/tournament/{TournamentId}/add/competition"))">Agregar Competición</FluentButton>
+                      OnClick="@(() => _nav.NavigateTo($"/tournament/{TournamentId}/add/competition"))">Add Competition</FluentButton>
     </FluentGridItem>
 </FluentGrid>
 
@@ -26,26 +26,26 @@
 	<ChildContent>
 		<PropertyColumn Title="N°" Property="@(c => c.N)" />
 
-		<TemplateColumn Title="Fecha Inicio">
+		<TemplateColumn Title="Start Date">
 			@context.StartDate.ToLocalTime().ToString(CultureInfo.CurrentCulture.DateTimeFormat.FullDateTimePattern)
 		</TemplateColumn>
 
-		<TemplateColumn Title="Fecha Fin">
+		<TemplateColumn Title="End Date">
 			@context.EndDate?.ToLocalTime().ToString(CultureInfo.CurrentCulture.DateTimeFormat.ShortDatePattern)
 		</TemplateColumn>
 
-		<TemplateColumn Title="Lugar">
+		<TemplateColumn Title="Location">
 			@GetInlineLocation(context)
 		</TemplateColumn>
 
-		<TemplateColumn Title="Acciones" Align="@Align.End">
+		<TemplateColumn Title="Actions" Align="@Align.End">
 			<FluentButton Class="underline"
 				Appearance="Appearance.Lightweight"
 				IconEnd="@(new Icons.Regular.Size16.Open())" 
-				OnClick="@(() => GoToPositions(context))">Tabla de posiciones</FluentButton>
+				OnClick="@(() => GoToPositions(context))">Leaderboard</FluentButton>
 			<FluentButton
-						  IconEnd="@(new Icons.Regular.Size24.Edit())"
-						  OnClick="@(() => Edit(context))" />
+        IconEnd="@(new Icons.Regular.Size24.Edit())"
+        OnClick="@(() => Edit(context))" />
 			<FluentButton
 				IconEnd="@(new Icons.Regular.Size24.Delete().WithColor("red"))" 
 				OnClick="@(() => Delete(context))" />
@@ -55,7 +55,7 @@
 	<EmptyContent>
 		<div Style="min-height: 300px;" class="flex items-center empty-content pt-2">
 			<FluentIcon Icon="Icons.Regular.Size24.Warning" Color="@Color.Accent" />
-			&nbsp; Todavía no hay competiciones.
+			&nbsp; There are no competitions yet.
 		</div>
 	</EmptyContent>
 </FluentDataGrid>
@@ -92,10 +92,10 @@
 	async Task Delete(GetTournamentCompetitionsQueryResult competition)
 	{
 		var dialog = await _dialogService.ShowConfirmationAsync(
-			$"Eliminar la competición N° {competition.N}?",
-			"Eliminar",
-			"Cancelar",
-			"Eliminar Competición");
+			$"Delete competition N° {competition.N}?",
+			"Delete",
+			"Cancel",
+			"Delete Competition");
 
 		var result = await dialog.Result;
 		if (!result.Cancelled)
@@ -109,7 +109,7 @@
 			}
 			else
 			{
-				_toastService.ShowSuccess($"Eliminada competición N° {competition.N}");
+				_toastService.ShowSuccess($"Deleted competition N° {competition.N}");
 				await GetCompetitions();
 			}
 		}

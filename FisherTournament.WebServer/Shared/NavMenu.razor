@@ -12,32 +12,33 @@
             @DividerTemplate
 
         <FluentNavMenu Style="width: fit-content !important; flex-direction: row;align-items: center !important;" Id="nav-page" Class="gap-x-1 w-fit flex items-center flex-row">
-                <FluentNavLink Href="/tournaments" Icon="@(new Icons.Regular.Size20.Trophy())">Fechas y Torneos</FluentNavLink>
+            <FluentNavLink Href="/tournaments" Icon="@(new Icons.Regular.Size20.Trophy())">Dates and Tournaments</FluentNavLink>
 
+            @DividerTemplate
+
+            <FluentNavLink Href="/fishers" Icon="@(new Icons.Regular.Size20.People())">Fishers</FluentNavLink>
+
+            @if (_nav.Uri.Contains("/notary"))
+            {
                 @DividerTemplate
 
-                <FluentNavLink Href="/fishers" Icon="@(new Icons.Regular.Size20.People())">Pescadores</FluentNavLink>
+                <FluentNavLink Href=@_nav.Uri Icon="@(new Icons.Regular.Size20.NotepadPerson())">Notary</FluentNavLink>
+            }
+        </FluentNavMenu>
 
-                @if (_nav.Uri.Contains("/notary"))
-                {
-                    @DividerTemplate
-
-                    <FluentNavLink Href=@_nav.Uri Icon="@(new Icons.Regular.Size20.NotepadPerson())">Notario</FluentNavLink>
-                }
-            </FluentNavMenu>
-
-            <span slot="end">
-            <FluentSwitch @bind-Value="@IsInDarkMode" @bind-Value:after=OnToggleTheme title="Tema">
-                    <span class="label">Tema</span>
-                    <span slot="unchecked-message">
-                        <FluentIcon class="align-middle" Icon="Icons.Regular.Size20.WeatherSunny" Color="Color.Neutral" />
-                    </span>
-                    <span slot="checked-message">
-                        <FluentIcon class="align-middle" Icon="Icons.Regular.Size20.WeatherMoon" Color="Color.Neutral" />
-                    </span>
-                </FluentSwitch>
-            </span>
+        <span slot="end">
+            <FluentSwitch @bind-Value="@IsInDarkMode" @bind-Value:after=OnToggleTheme title="Theme">
+                <span class="label">Theme</span>
+                <span slot="unchecked-message">
+                    <FluentIcon class="align-middle" Icon="Icons.Regular.Size20.WeatherSunny" Color="Color.Neutral" />
+                </span>
+                <span slot="checked-message">
+                    <FluentIcon class="align-middle" Icon="Icons.Regular.Size20.WeatherMoon" Color="Color.Neutral" />
+                </span>
+            </FluentSwitch>
+        </span>
     </FluentToolbar>
+
 </div>
 
 @code {

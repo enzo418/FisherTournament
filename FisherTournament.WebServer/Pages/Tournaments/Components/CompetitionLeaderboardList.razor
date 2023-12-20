@@ -14,37 +14,37 @@
 <div style="height: calc(100% - 200px); overflow-y: scroll;">
     <FluentDataGrid Items="@positions" Virtualize="true" ItemSize="50" GridTemplateColumns="0.2fr 0.6fr 0.3fr 0.4fr 0.5fr">
         <ChildContent>
-            <PropertyColumn Title="Posición" Property="@(c => c.Position)" />
+            <PropertyColumn Title="Position" Property="@(c => c.Position)" />
 
-            <PropertyColumn Title="Nombre" Property="@(c => c.Name)" />
+            <PropertyColumn Title="Name" Property="@(c => c.Name)" />
 
-            <PropertyColumn Title="Suma de Puntos" Property="@(c => c.TotalScore)" />
+            <PropertyColumn Title="Total Points" Property="@(c => c.TotalScore)" />
 
-            @* <PropertyColumn Title="Desempate" Property="@(c => c.TieBreakingReason)" /> *@
-       
-            <TemplateColumn Title="Desempate">
+            @* <PropertyColumn Title="Tie Breaker" Property="@(c => c.TieBreakingReason)" /> *@
+
+            <TemplateColumn Title="Tie Breaker">
                 @if (context.TieBreakingReason is not null)
                 {
                     <FluentStack Orientation="Orientation.Horizontal" VerticalAlignment="VerticalAlignment.Center">
-                        <span>@context.TieBreakingReason</span>                
+                        <span>@context.TieBreakingReason</span>
                         <FluentIcon Id="@context.FisherId" Icon="Icons.Regular.Size16.Info" />
 
                         <FluentTooltip Anchor="@context.FisherId">
-                            M/P = Por mayor pieza
+                            M/P = For the biggest piece
                             <br />
-                            M/P N = Por la mayor N-ésima pieza
+                            M/P N = For the N-th biggest piece
                             <br />
-                            D = Aleatorio
+                            D = Random
                         </FluentTooltip>
                     </FluentStack>
                 }
             </TemplateColumn>
 
-            <TemplateColumn Title="Acciones" Align="@Align.End">
+            <TemplateColumn Title="Actions" Align="@Align.End">
                 <FluentButton IconStart="@(new Icons.Regular.Size24.Info())"
                               Appearance="Appearance.Stealth"
-                              OnClick="@(() => OpenDetails(context))"> 
-                              Detalles
+                              OnClick="@(() => OpenDetails(context))">
+                    Details
                 </FluentButton>
             </TemplateColumn>
         </ChildContent>
@@ -52,11 +52,12 @@
         <EmptyContent>
             <div Style="min-height: 300px;" class="flex items-center empty-content pt-2">
                 <FluentIcon Icon="Icons.Regular.Size24.Warning" Color="@Color.Accent" />
-                &nbsp; No hay posiciones registradas para esta competición
+                &nbsp; There are no positions registered for this competition
             </div>
         </EmptyContent>
     </FluentDataGrid>
 </div>
+
 
 @code {
     private string? _lastCompetitionId = "";

@@ -11,53 +11,45 @@
 
 <div class="px-4">
 	<div class="flex flex-row w-full items-center justify-between mb-4">
-		<h1 class="page-title">Torneos/Fechas</h1>
+		<h1 class="page-title">Tournaments/Dates</h1>
 
 		<FluentButton OnClick="@(() => _nav.NavigateTo("/tournaments/add"))"
-						IconStart="@(new Icons.Regular.Size16.AddCircle())" 
-						Appearance="Appearance.Accent">
-			Agregar Torneo
+					  IconStart="@(new Icons.Regular.Size16.AddCircle())"
+					  Appearance="Appearance.Accent">
+			Add Tournament
 		</FluentButton>
 	</div>
 
 
-	<FluentLabel Typo="Typography.H3">En curso</FluentLabel>
-	@* <FluentDivider class="mt-1" /> *@
-
-	@* <CenteredSectionSeparator Class="mb-7">
-		<CustomChild>
-			<FluentLabel Typo="Typography.H3">En curso</FluentLabel>
-		</CustomChild>
-	</CenteredSectionSeparator> *@
+	<FluentLabel Typo="Typography.H3">In progress</FluentLabel>
 
 	<div class="flex gap-4">
 		@foreach (var tournament in OngoingTournaments)
 		{
 			<FluentCard class="flex flex-col w-fit mt-4 h-fit pt-2.5 pb-2.5 px-4" Style="min-width: 620px;">
 				<div class="flex flex-row">
-					@* <FluentLabel Class="pt-2.5" Typo="Typography.H6" Color="Color.Disabled">Torneo: </FluentLabel> *@
 
 					<div class="flex flex-row w-full items-center gap-x-5">
 						<FluentLabel Typo="Typography.H4">@tournament.tournament.Name</FluentLabel>
 						<FluentNavLink Href="@("/tournament/"+tournament.tournament.Id)" Class="flex gap-x-2">
-							Ir al torneo
+							Go to tournament
 							<FluentIcon Value="@(new Icons.Regular.Size16.ArrowRight())" Class="align-middle" />
 						</FluentNavLink>
 
 						<FluentNavLink Href="@("/tournament/"+tournament.tournament.Id+"/add/inscription")" Class="flex gap-x-2">
-							Agregar Inscripción
+							Add Inscription
 							<FluentIcon Value="@(new Icons.Regular.Size16.ArrowRight())" Class="align-middle" />
 						</FluentNavLink>
 
 						<FluentNavLink Href="@("/tournament/"+tournament.tournament.Id+"/add/score")" Class="flex gap-x-2">
-							Agregar Puntaje
+							Add Score
 							<FluentIcon Value="@(new Icons.Regular.Size16.ArrowRight())" Class="align-middle" />
 						</FluentNavLink>
 					</div>
 				</div>
 
 				<div class="flex flex-row pt-2.5">
-					<FluentLabel Class="whitespace-nowrap pr-3" Typo="Typography.H6" Color="Color.Accent">Fecha Inicio del torneo </FluentLabel>
+					<FluentLabel Class="whitespace-nowrap pr-3" Typo="Typography.H6" Color="Color.Accent">Tournament Start Date </FluentLabel>
 
 					<div class="flex flex-row w-full items-center">
 						<FluentLabel Typo="Typography.Body">@tournament.tournament.StartDate.ToString(CultureInfo.CurrentCulture.DateTimeFormat.ShortDatePattern)</FluentLabel>
@@ -67,24 +59,24 @@
 				@if (tournament.Competitions.Count() == 0)
 				{
 					<div class="flex flex-row pt-2.5">
-						<FluentLabel Class="whitespace-nowrap pr-3" Typo="Typography.H6" Color="Color.Accent">Fechas del torneo proximas o en curso </FluentLabel>
+						<FluentLabel Class="whitespace-nowrap pr-3" Typo="Typography.H6" Color="Color.Accent">Upcoming or in progress tournament dates </FluentLabel>
 
 						<div class="flex flex-row w-full items-center">
-							<FluentLabel Typo="Typography.Body">El torneo todavía no tiene fechas</FluentLabel>
+							<FluentLabel Typo="Typography.Body">The tournament still has no dates</FluentLabel>
 						</div>
 					</div>
-				} else {
-					<FluentLabel Class="pt-2.5" Typo="Typography.H6" Color="Color.Accent">Fechas proximas o en curso del torneo</FluentLabel>
+				} else
+				{
+					<FluentLabel Class="pt-2.5" Typo="Typography.H6" Color="Color.Accent">Upcoming or in progress tournament dates</FluentLabel>
 
-					<FluentDataGrid 
-						Class="mt-1" 
-						TGridItem="GetTournamentCompetitionsQueryResult" 
-						Items="@(tournament.Competitions.Where(c => c.EndDate is null || (c.EndDate.HasValue && c.EndDate.Value >= DateTime.UtcNow)).AsQueryable())" 
-						GridTemplateColumns="0.18fr 0.8fr 0.3fr 0.5fr">
+					<FluentDataGrid Class="mt-1"
+									TGridItem="GetTournamentCompetitionsQueryResult"
+									Items="@(tournament.Competitions.Where(c => c.EndDate is null || (c.EndDate.HasValue && c.EndDate.Value >= DateTime.UtcNow)).AsQueryable())"
+									GridTemplateColumns="0.18fr 0.8fr 0.3fr 0.5fr">
 						<ChildContent>
 							<PropertyColumn Title="N°" Align="Align.Center" Property="@(c => c.N)" />
 
-							<TemplateColumn Title="Fecha Inicio" Align="Align.Center">
+							<TemplateColumn Title="Start Date" Align="Align.Center">
 								@context.StartDate.ToLocalTime().ToString(CultureInfo.CurrentCulture.DateTimeFormat.FullDateTimePattern)
 							</TemplateColumn>
 
@@ -96,7 +88,7 @@
 								</FluentNavLink>
 							</TemplateColumn>
 
-							<TemplateColumn Title="Ir a modo notario" Align="Align.Center">
+							<TemplateColumn Title="Go to notary mode" Align="Align.Center">
 								<FluentNavLink Class="flex gap-x-2 underline w-full justify-center whitespace-nowrap center-fluent-nav-icon"
 											   Href="@("/tournament/"+tournament.tournament.Id+"/competition/"+@context.Id+"/notary")"
 											   Style="color: var(--accent-fill-rest);">
@@ -106,7 +98,7 @@
 						</ChildContent>
 						<EmptyContent>
 							<div Style="min-height: 100px;" class="flex items-center empty-content pt-2">
-								&nbsp; Todavía no hay competiciones.
+								&nbsp; There are still no competitions.
 							</div>
 						</EmptyContent>
 					</FluentDataGrid>
@@ -119,35 +111,28 @@
 	{
 		<div Style="min-height: 100px;" class="flex flex-row w-full items-center justify-center">
 			<FluentIcon Icon="Icons.Regular.Size24.Warning" Color="@Color.Disabled" />
-			&nbsp; No hay torneos en curso.
+			&nbsp; There are no tournaments in progress.
 		</div>
 	}
 
 
-	<FluentLabel Typo="Typography.H3" Class="pt-14 mb-10">Buscar fecha</FluentLabel>
-	@* <FluentDivider class="mb-4" /> *@
-	@* <CenteredSectionSeparator Class="mt-16 mb-10">
-		<CustomChild>
-			<FluentLabel Typo="Typography.H3">Buscar fecha</FluentLabel>
-		</CustomChild>
-	</CenteredSectionSeparator> *@
+	<FluentLabel Typo="Typography.H3" Class="pt-14 mb-10">Search competition</FluentLabel>
 
 	<div class="flex flex-row w-full justify-center gap-10 mb-4">
 		<div>
-			<FluentSelect
-				Items="@(Enumerable.Range(DateTime.Now.Year-5, 6))"
-				@bind-Value="SelectedYear"
-				OptionText="@(i => i.ToString())" 
-				OptionValue="@(i => i.ToString())" 
-				@oninput=SearchByYearAsync>
+			<FluentSelect Items="@(Enumerable.Range(DateTime.Now.Year-5, 6))"
+			@bind-Value="SelectedYear"
+						  OptionText="@(i => i.ToString())"
+						  OptionValue="@(i => i.ToString())"
+			@oninput=SearchByYearAsync>
 				<LabelTemplate>
-					Año del torneo
+					Tournament year
 				</LabelTemplate>
 			</FluentSelect>
 		</div>
 
 		<FluentNumberField @oninput=SearchByNumberAsync @bind-Value="SelectedNumber" TValue="int">
-			<div slot="start">N°</div> Número de la fecha
+			<div slot="start">N°</div> Competition number
 		</FluentNumberField>
 	</div>
 
@@ -158,16 +143,16 @@
 					GridTemplateColumns="0.15fr 0.4fr 0.3fr 0.3fr 0.7fr">
 		<ChildContent>
 			<PropertyColumn Property="@(p => p.N)" Sortable="false" Title="N°" />
-			<PropertyColumn Property="@(p => p.TournamentName)" Sortable="false" Title="Nombre del torneo" />
-			<PropertyColumn Property="@(p => p.StartDate)" Format="@CultureInfo.CurrentCulture.DateTimeFormat.ShortDatePattern" Sortable="false" Title="Inicio de la fecha" />
-			<PropertyColumn Property="@(p => p.EndDate)" Format="@CultureInfo.CurrentCulture.DateTimeFormat.ShortDatePattern" Sortable="false" Title="Fin de la fecha" />
-			<TemplateColumn Title="Acciones" Align="@Align.End">
+			<PropertyColumn Property="@(p => p.TournamentName)" Sortable="false" Title="Tournament name" />
+			<PropertyColumn Property="@(p => p.StartDate)" Format="@CultureInfo.CurrentCulture.DateTimeFormat.ShortDatePattern" Sortable="false" Title="Start of the competition" />
+			<PropertyColumn Property="@(p => p.EndDate)" Format="@CultureInfo.CurrentCulture.DateTimeFormat.ShortDatePattern" Sortable="false" Title="End of the competition" />
+			<TemplateColumn Title="Actions" Align="@Align.End">
 				<FluentButton IconEnd="@(new Icons.Regular.Size16.Share())" OnClick="@(() => GoToTournament(context))">
-				Ir al torneo
+					Go to tournament
 				</FluentButton>
 
 				<FluentButton IconEnd="@(new Icons.Regular.Size16.Share())" OnClick="@(() => GoToLeaderboard(context))">
-				Tabla de posiciones
+					Leaderboard
 				</FluentButton>
 			</TemplateColumn>
 		</ChildContent>
@@ -175,23 +160,15 @@
 		<EmptyContent>
 			<div Style="min-height: 100px;" class="empty-content">
 				<FluentIcon Icon="Icons.Regular.Size24.Warning" Color="@Color.Disabled" />
-				&nbsp; No se encontraron competiciones.
+				&nbsp; No competitions were found.
 			</div>
 		</EmptyContent>
 	</FluentDataGrid>
 
-	@* @if (competitionSearchPagination.TotalItemCount > 0) *@
-
-		<FluentPaginator State="@competitionSearchPagination" />
+	<FluentPaginator State="@competitionSearchPagination" />
 
 
-	<FluentLabel Typo="Typography.H3" Class="pt-14 mb-10">Buscar torneo</FluentLabel>
-	@* <FluentDivider class="mb-4" /> *@
-	@* <CenteredSectionSeparator Class="mt-16 mb-10">
-			<CustomChild>
-				<FluentLabel Typo="Typography.H3">Buscar torneo</FluentLabel>
-			</CustomChild>
-	</CenteredSectionSeparator> *@
+	<FluentLabel Typo="Typography.H3" Class="pt-14 mb-10">Search tournament</FluentLabel>
 
 	<div class="flex flex-row w-full justify-center gap-10 mb-4">
 		<div>
@@ -201,7 +178,7 @@
 						  OptionValue="@(i => i.ToString())"
 			@oninput=SearchByYearAsync>
 				<LabelTemplate>
-					Año del torneo
+					Tournament year
 				</LabelTemplate>
 			</FluentSelect>
 		</div>
@@ -213,25 +190,25 @@
 					Pagination="@tournamentSummaryPagination"
 					GridTemplateColumns="0.3fr 0.2fr 0.2fr 1fr">
 		<ChildContent>
-			<PropertyColumn Property="@(p => p.Name)" Sortable="false" Title="Nombre" />
-			<PropertyColumn Property="@(p => p.StartDate)" Format="@CultureInfo.CurrentCulture.DateTimeFormat.ShortDatePattern" Sortable="false" Title="Fecha inicio" />
-			<PropertyColumn Property="@(p => p.EndDate)" Format="@CultureInfo.CurrentCulture.DateTimeFormat.ShortDatePattern" Sortable="false" Title="Fecha fin" />
+			<PropertyColumn Property="@(p => p.Name)" Sortable="false" Title="Name" />
+			<PropertyColumn Property="@(p => p.StartDate)" Format="@CultureInfo.CurrentCulture.DateTimeFormat.ShortDatePattern" Sortable="false" Title="Start date" />
+			<PropertyColumn Property="@(p => p.EndDate)" Format="@CultureInfo.CurrentCulture.DateTimeFormat.ShortDatePattern" Sortable="false" Title="End date" />
 
-			<TemplateColumn Title="Acciones" Align="@Align.End">
+			<TemplateColumn Title="Actions" Align="@Align.End">
 				<FluentButton IconEnd="@(new Icons.Regular.Size16.Share())" OnClick="@(() => GoToInscriptions(context))">
-				@context.InscriptionsCount Inscripciones	
+					@context.InscriptionsCount Inscriptions
 				</FluentButton>
 
 				<FluentButton IconEnd="@(new Icons.Regular.Size16.Share())" OnClick="@(() => GoToCompetitions(context))">
-					@context.CompetitionsCount Competencias
+					@context.CompetitionsCount Competitions
 				</FluentButton>
 
 				<FluentButton IconEnd="@(new Icons.Regular.Size16.Share())" OnClick="@(() => GoToCategories(context))">
-					@context.CategoriesCount Categorias
+					@context.CategoriesCount Categories
 				</FluentButton>
 
 				<FluentButton IconEnd="@(new Icons.Regular.Size16.Share())" OnClick="@(() => GoToTournament(context))">
-				Ir al torneo	
+					Go to tournament
 				</FluentButton>
 			</TemplateColumn>
 		</ChildContent>
@@ -239,7 +216,7 @@
 		<EmptyContent>
 			<div Style="min-height: 100px;" class="empty-content">
 				<FluentIcon Icon="Icons.Regular.Size24.Warning" Color="@Color.Disabled" />
-				&nbsp; No se encontraron torneos.
+				&nbsp; No tournaments were found.
 			</div>
 		</EmptyContent>
 	</FluentDataGrid>
@@ -248,6 +225,7 @@
 
 	<div class="mb-10"></div>
 </div>
+
 
 @code {
 	record struct TournamentSummary(GetTournamentsSummaryQueryResult tournament, IEnumerable<GetTournamentCompetitionsQueryResult> Competitions);

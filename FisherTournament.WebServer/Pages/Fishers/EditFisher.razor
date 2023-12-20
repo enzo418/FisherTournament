@@ -12,26 +12,26 @@
 @inject IJSRuntime JSRuntime
 
 <div class="px-4" style="height: 80%">
-    <h1 class="page-title">Editar Pescador</h1>
+    <h1 class="page-title">Edit Fisher</h1>
 
     <EditForm EditContext="@editContext" OnSubmit="@Submit" class="relative h-full">
         <div class="flex justify-center gap-20 pt-7">
             <div class="flex flex-col gap-10 justify-normal">
                 <div>
-                    <span class="text-sm">Información Personal</span>
+                    <span class="text-sm">Personal Information</span>
                     <FluentDivider Style="width: 100%;" Role="DividerRole.Presentation" />
                 </div>
 
                 <p>
                     <FluentTextField AutoComplete="off" @bind-Value="@Model.FirstName" Required="true">
-                        Nombre <span class="red">*</span>
+                        First Name <span class="red">*</span>
                     </FluentTextField>
                     <ValidationMessage For="() => Model!.FirstName" />
                 </p>
 
                 <p>
                     <FluentTextField AutoComplete="off" @bind-Value="@Model.LastName" Required="true">
-                        Apellido <span class="red">*</span>
+                        Last Name <span class="red">*</span>
                     </FluentTextField>
                     <ValidationMessage For="() => Model!.LastName" />
                 </p>
@@ -46,7 +46,7 @@
 
             <div class="flex flex-col gap-10 justify-normal">
                 <div>
-                    <span class="text-sm">Opcional</span>
+                    <span class="text-sm">Optional</span>
                     <FluentDivider Style="width: 100%;" Role="DividerRole.Presentation" />
                 </div>
 
@@ -55,16 +55,15 @@
                                      Pattern="^(0[1-9]|[12][0-9]|3[01])/(0[1-9]|1[0-2])/\d{4}$">
                         @* <FluentIcon Name="@FluentIcons.Calendar" Slot="start" Size="@IconSize.Size20"
                         Variant=IconVariant.Regular Color="Color.Neutral" /> *@
-                        Fecha nacimiento
+                        Date of Birth
                     </FluentTextField>
-                    <p class="error @dateValidationClasses">@dateValidationError</p>
                 </p>
             </div>
         </div>
 
         <div class="absolute bottom-0 m-auto flex columns-2 gap-28 w-full place-content-center">
-            <FluentButton Appearance="Appearance.Stealth" @onclick=OnCancel>Cancelar</FluentButton>
-            <FluentButton Type=ButtonType.Submit Appearance="Appearance.Accent" Disabled=!editContext!.IsModified()>Guardar</FluentButton>
+            <FluentButton Appearance="Appearance.Stealth" @onclick=OnCancel>Cancel</FluentButton>
+            <FluentButton Type=ButtonType.Submit Appearance="Appearance.Accent" Disabled=!editContext!.IsModified()>Save</FluentButton>
         </div>
     </EditForm>
 </div>
@@ -81,10 +80,6 @@
 
     private EditFisherRequest Model { get; set; } = null!;
 
-    string dateValidationError = "";
-
-    string dateValidationClasses = "hidden";
-
     private bool _shouldExit = false;
 
     private bool _sending = false;
@@ -95,7 +90,7 @@
 
         if (query.IsError)
         {
-            _toastService.ShowError($"No se encontró pescador con id {FisherId}");
+            _toastService.ShowError($"Fisher with id {FisherId} not found");
             _shouldExit = true;
         }
 
@@ -111,19 +106,6 @@
     protected override void OnAfterRender(bool _)
     {
         if (_shouldExit) _nav.NavigateTo("/404");
-    }
-
-    private void ValidateDateFormat(ChangeEventArgs e)
-    {
-        if (!DateTime.TryParseExact(e.Value?.ToString(), CultureInfo.CurrentCulture.DateTimeFormat.ShortDatePattern, null, System.Globalization.DateTimeStyles.None, out _))
-        {
-            dateValidationError = "Formato de fecha inválido";
-            dateValidationClasses = "";
-        } else
-        {
-            dateValidationError = "";
-            dateValidationClasses = "hidden";
-        }
     }
 
     private async void OnCancel()
@@ -145,7 +127,7 @@
             editContext?.AddValidationErrors(response.Result.Errors, messageStore, Model);
         } else
         {
-            _toastService.ShowSuccess($"Editado correctamente");
+            _toastService.ShowSuccess($"Edited successfully");
             await JSRuntime.GoBack();
         }
 

@@ -15,18 +15,18 @@
         <div style="color: var(--neutral-foreground-rest);background-color: var(--neutral-layer-2)" class="h-full pt-6 pl-3 pr-3">
             <FluentLabel Typo="Typography.H3" Class="text-center pb-2" Style="color: var(--neutral-stroke-strong-active);text-wrap: wrap; max-width: 300px;">@_tournamentName</FluentLabel>
             <FluentNavMenu @ref="@_navMenu" id="nav-tournament" Width="300">
-                <FluentNavLink Match=NavLinkMatch.All Icon="@(new Icons.Regular.Size24.Home())" Href=@($"/tournament/{TournamentId}")>Información General</FluentNavLink>
-                <FluentNavLink Icon="@(new Icons.Regular.Size24.PeopleList())" Href=@($"/tournament/{TournamentId}/categories")>Categorías</FluentNavLink>
-                <FluentNavGroup Title="Inscripciones" Icon="@(new Icons.Regular.Size24.People())" Expanded=true>
-                    <FluentNavLink Icon="@(new Icons.Regular.Size24.PeopleAdd())" Href=@($"/tournament/{TournamentId}/add/inscription")>Agregar inscripción</FluentNavLink>
-                    <FluentNavLink Icon="@(new Icons.Regular.Size24.CalendarAgenda())" Href=@($"/tournament/{TournamentId}/inscriptions")>Ver inscripciones</FluentNavLink>
+                <FluentNavLink Match=NavLinkMatch.All Icon="@(new Icons.Regular.Size24.Home())" Href=@($"/tournament/{TournamentId}")>General Information</FluentNavLink>
+                <FluentNavLink Icon="@(new Icons.Regular.Size24.PeopleList())" Href=@($"/tournament/{TournamentId}/categories")>Categories</FluentNavLink>
+                <FluentNavGroup Title="Inscriptions" Icon="@(new Icons.Regular.Size24.People())" Expanded=true>
+                    <FluentNavLink Icon="@(new Icons.Regular.Size24.PeopleAdd())" Href=@($"/tournament/{TournamentId}/add/inscription")>Add Inscription</FluentNavLink>
+                    <FluentNavLink Icon="@(new Icons.Regular.Size24.CalendarAgenda())" Href=@($"/tournament/{TournamentId}/inscriptions")>View Inscriptions</FluentNavLink>
                 </FluentNavGroup>
-                <FluentNavGroup Title="Competiciones" Icon="@(new Icons.Regular.Size24.CalendarDate())" Expanded=true>
-                    <FluentNavLink Icon="@(new Icons.Regular.Size24.CalendarAdd())" Href=@($"/tournament/{TournamentId}/add/competition")>Agregar competición</FluentNavLink>
-                    <FluentNavLink Icon="@(new Icons.Regular.Size24.CalendarAgenda())" Href=@($"/tournament/{TournamentId}/competitions")>Ver competiciones</FluentNavLink>
+                <FluentNavGroup Title="Competitions" Icon="@(new Icons.Regular.Size24.CalendarDate())" Expanded=true>
+                    <FluentNavLink Icon="@(new Icons.Regular.Size24.CalendarAdd())" Href=@($"/tournament/{TournamentId}/add/competition")>Add Competition</FluentNavLink>
+                    <FluentNavLink Icon="@(new Icons.Regular.Size24.CalendarAgenda())" Href=@($"/tournament/{TournamentId}/competitions")>View Competitions</FluentNavLink>
                 </FluentNavGroup>
-                <FluentNavLink Icon="@(new Icons.Regular.Size24.CalendarMultiple())" Href=@($"/tournament/{TournamentId}/leaderboard")>Tabla de posiciones</FluentNavLink>
-                <FluentNavLink Icon="@(new Icons.Regular.Size24.FoodFish())" Href=@($"/tournament/{TournamentId}/add/score")>Agregar puntaje</FluentNavLink>
+                <FluentNavLink Icon="@(new Icons.Regular.Size24.CalendarMultiple())" Href=@($"/tournament/{TournamentId}/leaderboard")>Leaderboard</FluentNavLink>
+                <FluentNavLink Icon="@(new Icons.Regular.Size24.FoodFish())" Href=@($"/tournament/{TournamentId}/add/score")>Add Score</FluentNavLink>
             </FluentNavMenu>
         </div>
 
@@ -43,7 +43,7 @@
 @code {
     private string TournamentId = null!;
 
-    private string _tournamentName = "Torneo";
+    private string _tournamentName = "Tournament";
     public Action<string> ChangedTournamentName { get; private set; } = null!;
 
     private FluentNavMenu? _navMenu;
@@ -75,7 +75,7 @@
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        if (_tournamentName == "Torneo")
+        if (_tournamentName == "Tournament")
         {
             var res = await _sender.Send(new GetTournamentQuery(TournamentId));
 

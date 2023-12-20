@@ -14,53 +14,53 @@
 @using Microsoft.Fast.Components.FluentUI;
 
 <div class="px-4 h-full" style="width: 98%">
-    <h1 class="page-title">Crear torneo</h1>
+    <h1 class="page-title">Create Tournament</h1>
 
     <EditForm EditContext="@editContext" OnSubmit="@Submit" class="flex flex-col items-center justify-between w-full mt-4">
         <FluentGrid Spacing="3" Justify="JustifyContent.Center">
             <FluentGridItem sm="12">
                 <div class="flex w-full justify-center flex-col pl-7 items-center">
-                    <FluentSwitch   Disabled=@(!tournaments.Any()) @bind-Value=@cloneTournament Label=" Copiar torneo anterior" />
+                    <FluentSwitch Disabled=@(!tournaments.Any()) @bind-Value=@cloneTournament Label=" Copy previous tournament" />
 
-                    <FluentLabel Class="pt-7 pl-7 pr-3 pb-2" Typo="Typography.Body" Disabled=@(!cloneTournament)>Selecciona el torneo a copiar</FluentLabel>
-                    <FluentSelect   Items="@tournaments"
-                                    OptionValue="@(i => i.Id)"
-                                    @bind-SelectedOption=@cloneSourceTournamentSelected
-                                    Disabled=@(!cloneTournament)
+                    <FluentLabel Class="pt-7 pl-7 pr-3 pb-2" Typo="Typography.Body" Disabled=@(!cloneTournament)>Select the tournament to copy</FluentLabel>
+                    <FluentSelect Items="@tournaments"
+                                  OptionValue="@(i => i.Id)"
+                    @bind-SelectedOption=@cloneSourceTournamentSelected
+                                  Disabled=@(!cloneTournament)
                                   TOption="GetTournamentsSummaryQueryResult">
-                    <OptionTemplate Context="ctxTournament">
-                        @ctxTournament.Name
-                    </OptionTemplate>
+                        <OptionTemplate Context="ctxTournament">
+                            @ctxTournament.Name
+                        </OptionTemplate>
                     </FluentSelect>
                 </div>
             </FluentGridItem>
 
             <FluentGridItem sm="12">
-                <FluentLabel Typo="Typography.Subject" Color="Color.Disabled">Datos del torneo nuevo</FluentLabel>
+                <FluentLabel Typo="Typography.Subject" Color="Color.Disabled">New tournament data</FluentLabel>
             </FluentGridItem>
 
             <FluentGridItem sm="12" md="5">
                 <p>
                     <FluentTextField Required="true" AutoComplete="off" Autofocus="true" @bind-Value="@Model.Name" class="w-full">
-                        Nombre del torneo <span class="red">*</span>
+                        Tournament name <span class="red">*</span>
                     </FluentTextField>
                     <ValidationMessage For="() => Model!.Name" />
                 </p>
             </FluentGridItem>
             <FluentGridItem sm="12" md="5">
                 <p>
-                    <FluentDatePicker class="w-full" Required="true" @bind-Value=StartDate AriaLabel="Fecha inicio" Label="Fecha inicio" />
+                    <FluentDatePicker class="w-full" Required="true" @bind-Value=StartDate AriaLabel="Start date" Label="Start date" />
                     <ValidationMessage For="() => Model!.StartDate" />
                 </p>
             </FluentGridItem>
         </FluentGrid>
 
         <div class="absolute bottom-0 mb-4 m-auto flex mt-7 columns-2 gap-28 w-full place-content-center">
-            <FluentButton Appearance="Appearance.Stealth" @onclick=CancelAsync>@(editContext.IsModified() ? "Cancelar" : "Volver")</FluentButton>
-            <FluentButton Type=ButtonType.Submit Appearance="Appearance.Accent" Disabled=!editContext.IsModified()>Continuar</FluentButton>
-        </div>
-    </EditForm>
-</div>
+            <FluentButton Appearance="Appearance.Stealth" @onclick=CancelAsync>@(editContext.IsModified() ? "Cancel" : "Back")</FluentButton>
+                <FluentButton Type=ButtonType.Submit Appearance="Appearance.Accent" Disabled=!editContext.IsModified()>Continue</FluentButton>
+            </div>
+        </EditForm>
+    </div>
 
 
     @code {
@@ -116,7 +116,7 @@
         } else
         {
             var fieldIdentifier = new FieldIdentifier(Model, nameof(Model.StartDate));
-            messageStore?.Add(fieldIdentifier, "Fecha invalida");
+            messageStore?.Add(fieldIdentifier, "Invalid date");
 
             editContext?.NotifyValidationStateChanged();
 
@@ -143,16 +143,14 @@
                 bool createdWithWarnings = response.Value.Warnings is not null && response.Value.Warnings.Any();
                 if (createdWithWarnings)
                 {
-                    _toast.ShowInfo("El torneo no pudo ser copiado en su totalidad.");
+                    _toast.ShowInfo("The tournament could not be fully copied.");
                     _toast.ShowErrors(response.Value.Warnings!);
-                }
-                else
+                } else
                 {
-                    _toast.ShowInfo("El torneo fue copiado correctamente.");
+                    _toast.ShowInfo("The tournament was copied successfully.");
                 }
             }
-        }
-        else
+        } else
         {
             var mapped = _mapper.Map<CreateTournamentCommand>(Model);
 
@@ -165,7 +163,7 @@
                 editContext.AddValidationErrors(response.Errors, messageStore, Model);
             } else
             {
-                _nav.NavigateTo("/tournament/"+response.Value.Id);
+                _nav.NavigateTo("/tournament/" + response.Value.Id);
             }
         }
 

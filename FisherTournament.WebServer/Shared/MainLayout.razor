@@ -50,7 +50,7 @@
     {
         _showLeaderBoardUpdateDelted.CallBack += async () =>
         {
-            _toast.ShowInfo("Se actualizó la tabla de posiciones");
+            _toast.ShowInfo("The leaderboard has been updated");
             await InvokeAsync(StateHasChanged);
         };
 
@@ -71,11 +71,12 @@
 
             IsInDarkMode = _baseLayerLuminance == StandardLuminance.DarkMode;
 
-            if (!IsInDarkMode && prefeersDarkMode) {
+            if (!IsInDarkMode && prefeersDarkMode)
+            {
                 SwitchTheme();
                 StateHasChanged();
             }
-            
+
             _leaderboardNotificationService.OnLeaderboardWasUpdated += OnLeaderboardUpdated;
         }
     }
@@ -104,15 +105,15 @@
             {
                 Id = "leaderboard-update",
                 Intent = ToastIntent.Info,
-                Title = "Se actualizó la tabla de posiciones",
+                Title = "The leaderboard has been updated",
                 Timeout = 5,
                 TopCTAType = ToastTopCTAType.Dismiss,
                 TopAction = null,
                 OnTopAction = null,
                 Icon = (new Icons.Regular.Size20.Info(), Color.Accent)
             });*/
-        
-         return Task.CompletedTask;
+
+        return Task.CompletedTask;
     }
 
     void IDisposable.Dispose()

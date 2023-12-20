@@ -20,18 +20,18 @@
 @inject ILogger<Leaderboard> _logger
 
 
-<h1 class="page-title-no-pt">Tabla de posiciones del <span style="color: var(--accent-fill-rest);">torneo</span></h1>
+<h1 class="page-title-no-pt">Tournament <span style="color: var(--accent-fill-rest);">Leaderboard</span></h1>
 
 <div class="mt-7 mb-7 flex flex-row w-full justify-between items-end">
     <div class="flex flex-row gap-x-2">
         <div>
             <FluentSelect Items=_categories
-                            OptionText="@(i => i.Name)"
-                            OptionValue="@(i => i.Id)"
-                            @bind-Value="@_selectedCategoryId"
-                            @oninput="OnSelectedCategoryAsync">
+                          OptionText="@(i => i.Name)"
+                          OptionValue="@(i => i.Id)"
+            @bind-Value="@_selectedCategoryId"
+            @oninput="OnSelectedCategoryAsync">
                 <LabelTemplate>
-                    Categoría
+                    Category
                 </LabelTemplate>
             </FluentSelect>
         </div>
@@ -40,24 +40,24 @@
 
         <ScrollerGoToCompetition Class="ml-3" TournamentId=@TournamentId />
     </div>
-    <FluentButton IconStart="@(new Icons.Regular.Size16.Share())" OnClick="ExportLeaderboard" Appearance="Appearance.Outline">Exportar</FluentButton>
+    <FluentButton IconStart="@(new Icons.Regular.Size16.Share())" OnClick="ExportLeaderboard" Appearance="Appearance.Outline">Export</FluentButton>
 </div>
 @* <FluentDivider class="mt-4 mb-4" />  *@
 
 <div style="height: calc(100% - 200px); overflow-y: scroll;">
     <FluentDataGrid Items="@positions" Virtualize="true" ItemSize="50" GridTemplateColumns="0.1fr 0.6fr 0.3fr 0.5fr">
         <ChildContent>
-            <PropertyColumn Title="Posición" Property="@(c => c.Position)" />
+            <PropertyColumn Title="Position" Property="@(c => c.Position)" />
 
-            <PropertyColumn Title="Nombre" Property="@(c => c.Name)" />
+            <PropertyColumn Title="Name" Property="@(c => c.Name)" />
 
-            <PropertyColumn Title="Suma de posiciones" Property="@(c => c.CompetitionPositions.Sum())" />
+            <PropertyColumn Title="Sum of positions" Property="@(c => c.CompetitionPositions.Sum())" />
 
-            <TemplateColumn Title="Acciones" Align="@Align.End">
+            <TemplateColumn Title="Actions" Align="@Align.End">
                 <FluentButton IconStart="@(new Icons.Regular.Size24.Info())"
                               Appearance="Appearance.Stealth"
-                              OnClick="@(() => OpenDetails(context))"> 
-                              Detalles
+                              OnClick="@(() => OpenDetails(context))">
+                    Details
                 </FluentButton>
             </TemplateColumn>
         </ChildContent>
@@ -65,7 +65,7 @@
         <EmptyContent>
             <div Style="min-height: 300px;" class="flex items-center empty-content pt-2">
                 <FluentIcon Icon="Icons.Regular.Size24.Warning" Color="@Color.Accent" />
-                &nbsp; No hay posiciones registradas en el torneo
+                &nbsp; No positions registered in the tournament
             </div>
         </EmptyContent>
     </FluentDataGrid>
@@ -75,8 +75,8 @@
     [Parameter]
     public string TournamentId { get; set; } = null!;
 
-    record struct Competencia(string Id, int N);
-    List<Competencia> competitions = new();
+    record struct Competition(string Id, int N);
+    List<Competition> competitions = new();
 
     public record struct Category(string Id, string Name);
     List<Category> _categories = new();
@@ -87,7 +87,7 @@
 
     string _selectedCategoryId = "";
 
-    string SelectedCompetition = "Todas las competiciones";
+    string SelectedCompetition = "All competitions";
 
     private bool shouldExit = false;
 
@@ -102,7 +102,7 @@
                 _selectedCategoryId = _categories.First(c => c.Name == "General").Id;
             } else _selectedCategoryId = _categories.First().Id;
 
-            SetRendedContent();
+            SetRenderedContent();
         }
 
         await FetchTournamentCompetitions();
@@ -144,11 +144,11 @@
             return;
         }
 
-        competitions = result.Value.Select(c => new Competencia(c.Id, c.N)).ToList();
+        competitions = result.Value.Select(c => new Competition(c.Id, c.N)).ToList();
 
     }
 
-    void SetRendedContent()
+    void SetRenderedContent()
     {
         if (string.IsNullOrEmpty(_selectedCategoryId)) return;
 
@@ -166,14 +166,14 @@
     {
         _selectedCategoryId = e.Value?.ToString();
 
-        SetRendedContent();
+        SetRenderedContent();
 
         return Task.CompletedTask;
     }
 
     async Task OnSelectedCompetitionAsync()
     {
-        _toastService.ShowInfo($"Cambiando a competencia {SelectedCompetition}");
+        _toastService.ShowInfo($"Switching to competition {SelectedCompetition}");
         await Task.CompletedTask;
     }
 
@@ -187,7 +187,7 @@
             });
     }
 
-    void GoToCompetition(Competencia competition)
+    void GoToCompetition(Competition competition)
     {
         _nav.NavigateTo($"/tournament/{TournamentId}/leaderboard/{competition.Id}");
     }
@@ -200,52 +200,14 @@
         {
             await FetchLeaderboard();
 
-            SetRendedContent();
+            SetRenderedContent();
 
             StateHasChanged();
         });
     }
 
-    async Task ExportLeaderboard()
+    void ExportLeaderboard()
     {
-        try
-        {
-            var exportReq = await _exportService.ExportTournamentLeaderboard(TournamentId);
-
-            if (exportReq.IsError)
-            {
-                _toastService.ShowErrors(exportReq.Errors);
-            } else
-            {
-                var directory = System.IO.Directory.GetCurrentDirectory();
-                _toastService.ShowSuccess(
-                    $"Tabla de posiciones exportada correctamente al archivo '{exportReq.Value}' en {directory}",
-                    null,
-                    "Abrir",
-                    EventCallback.Factory.Create<ToastResult>(this, t => HandleTopActionAsync(t, exportReq.Value))
-                );
-            }
-        } catch (System.IO.IOException e)
-        {
-            _logger.LogError(e, "Error exporting leaderboard");
-            _toastService.ShowError("No se puede expotar, el archivo esta siendo usado por otro programa.");
-        } catch (Exception e)
-        {
-            _logger.LogError(e, "Error exporting leaderboard");
-            _toastService.ShowError("Error inesperado al exportar la tabla de posiciones.");
-        }
-    }
-
-    private async Task HandleTopActionAsync(ToastResult result, string filePath)
-    {
-        ProcessStartInfo startInfo = new ProcessStartInfo
-            {
-                FileName = filePath,
-                UseShellExecute = true
-            };
-
-        Process.Start(startInfo);
-
-        await Task.CompletedTask;
+        _toastService.ShowWarning("Cannot export, it's a demo.");
     }
 }

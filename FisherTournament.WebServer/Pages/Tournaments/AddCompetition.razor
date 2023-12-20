@@ -17,18 +17,15 @@
 
 <EditForm class="relative h-full" OnSubmit="Submit" EditContext="@_editContext">
 
-	<h1 class="page-title-no-pt">Agregar Competición</h1>
+	<h1 class="page-title-no-pt">Add Competition</h1>
 
-	@* <p class="m-0 color-fg"></p>
-	<FluentDivider class="mt-1 mb-4" /> *@
-	<CenteredSectionSeparator Class="mt-10 mb-7">Fechas</CenteredSectionSeparator>
+	<CenteredSectionSeparator Class="mt-10 mb-7">Dates</CenteredSectionSeparator>
 
 	<div class="flex flex-col items-center">
 		<div>
 			<FluentDatePicker @bind-Value="@SelectedDate" Required="true">
-				@* TODO: No deberia ser simplemente fecha de la competencia? *@
 				<LabelTemplate>
-					Fecha de Inicio <span class="red">*</span>
+					Start Date <span class="red">*</span>
 				</LabelTemplate>
 			</FluentDatePicker>
 			<FluentTimePicker @bind-Value="@SelectedDate" Label="" />
@@ -36,17 +33,14 @@
 		</div>
 	</div>
 
-
-	@* <p class="m-0 mt-16 color-fg">Lugar de la competencia</p>
-	<FluentDivider class="mt-1 mb-4" /> *@
-	<CenteredSectionSeparator Class="mt-16 mb-7">Lugar de la competencia</CenteredSectionSeparator>
+	<CenteredSectionSeparator Class="mt-16 mb-7">Competition Location</CenteredSectionSeparator>
 
 	<div class="flex flex-row justify-evenly w-full">
 		<div>
 			<FluentTextField @bind-Value="@Model.Location.Place" Required="false" AutoComplete="off">
-				Direccion/Nombre del lugar
+				Address/Place Name
 				&nbsp;&nbsp;&nbsp;
-				<FluentBadge Appearance="Appearance.Neutral" Fill="lowlight" BackgroundColor="#000" Color="#fff">Opcional</FluentBadge>
+				<FluentBadge Appearance="Appearance.Neutral" Fill="lowlight" BackgroundColor="#000" Color="#fff">Optional</FluentBadge>
 			</FluentTextField>
 			<ValidationMessage For="() => Model!.Location" />
 			<ValidationMessage For="() => Model!.Location.Place" />
@@ -54,12 +48,12 @@
 	</div>
 
 	<div class="absolute bottom-0 mb-6 mt-6 flex flex-row w-full justify-center gap-24">
-		<FluentButton Appearance="Appearance.Stealth" OnClick="Cancel">Cancelar</FluentButton>
+		<FluentButton Appearance="Appearance.Stealth" OnClick="Cancel">Cancel</FluentButton>
 		<FluentButton 
 				IconStart="@(new Icons.Regular.Size16.Checkmark())" 
 				Appearance="Appearance.Accent"
 				Disabled="@_saving"
-				Type="ButtonType.Submit">Guardar</FluentButton>
+				Type="ButtonType.Submit">Save</FluentButton>
 	</div>
 </EditForm>
 
@@ -82,7 +76,6 @@
 			if (value is null)  return;
 
 			Model.StartDateTime = value.Value.ToUniversalTime();
-			//Model.EndDateTime = value.Value.AddDays(1).ToUniversalTime();
 		}
 	}
 
@@ -116,8 +109,7 @@
 		}
 		else
 		{
-			//_saving = false;
-			_toastService.ShowSuccess("Competición agregada");
+			_toastService.ShowSuccess("Competition added");
 			await _js.GoBack();
 		}
 	}

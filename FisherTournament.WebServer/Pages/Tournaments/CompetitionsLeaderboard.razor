@@ -16,17 +16,17 @@
 @inject ExportLeaderboardService _exportService
 @inject ILogger<CompetitionsLeaderboard> _logger
 
-<h1 class="page-title-no-pt">Tabla de posiciones de la <span style="color: var(--accent-fill-rest);">fecha N° @competition.N</span></h1>
+<h1 class="page-title-no-pt">Leaderboard for <span style="color: var(--accent-fill-rest);">round N° @competition.N</span></h1>
 
 <div class="mt-7 mb-7 flex flex-row w-full justify-between items-end">
     <div class="flex flex-row gap-x-2">
         <div>
-            <FluentSelect   Items=_categories
-                            OptionText="@(i => i.Name)"
-                            OptionValue="@(i => i.Id)"
-                            @bind-Value="@_selectedCategoryId">
+            <FluentSelect Items=_categories
+                          OptionText="@(i => i.Name)"
+                          OptionValue="@(i => i.Id)"
+            @bind-Value="@_selectedCategoryId">
                 <LabelTemplate>
-                    Categoría
+                    Category
                 </LabelTemplate>
             </FluentSelect>
         </div>
@@ -35,12 +35,11 @@
 
         <ScrollerGoToCompetition Class="ml-3" TournamentId=@TournamentId />
     </div>
-    
 
-    <FluentButton 
-            IconStart="@(new Icons.Regular.Size16.Share())" 
-            OnClick="ExportLeaderboard" 
-            Appearance="Appearance.Outline">Exportar</FluentButton>
+
+    <FluentButton IconStart="@(new Icons.Regular.Size16.Share())"
+                  OnClick="ExportLeaderboard"
+                  Appearance="Appearance.Outline">Export</FluentButton>
 </div>
 
 <CompetitionLeaderboardList CategoryId="@_selectedCategoryId" OnCategoriesChanged=@OnCategoriesChanged CompetitionId=@CompetitionId />
@@ -78,7 +77,7 @@
         await GetCompetition();
     }
 
-    public void  OnCategoriesChanged(List<(string Id, string Name)> cats)
+    public void OnCategoriesChanged(List<(string Id, string Name)> cats)
     {
         _categories = cats;
 
@@ -121,46 +120,8 @@
         return null;
     }
 
-    async Task ExportLeaderboard()
+    void ExportLeaderboard()
     {
-        try
-        {
-            var exportReq = await _exportService.ExportCompetitionLeaderboard(CompetitionId);
-
-            if (exportReq.IsError)
-            {
-                _toastService.ShowErrors(exportReq.Errors);
-            } else
-            {
-                var directory = System.IO.Directory.GetCurrentDirectory();
-                _toastService.ShowSuccess(
-                    $"Tabla de posiciones exportada correctamente al archivo '{exportReq.Value}' en {directory}",
-                    null,
-                    "Abrir",
-                    EventCallback.Factory.Create<ToastResult>(this, t => HandleTopActionAsync(t, exportReq.Value))
-                );
-            }
-        } catch (System.IO.IOException e)
-        {
-            _logger.LogError(e, "Error exporting leaderboard");
-            _toastService.ShowError("No se puede expotar, el archivo esta siendo usado por otro programa.");
-        } catch (Exception e)
-		{
-			_logger.LogError(e, "Error exporting leaderboard");
-			_toastService.ShowError("Error inesperado al exportar la tabla de posiciones.");
-		}
-    }
-
-    private async Task HandleTopActionAsync(ToastResult result, string filePath)
-    {
-        ProcessStartInfo startInfo = new ProcessStartInfo
-        {
-            FileName = filePath,
-            UseShellExecute = true
-        };
-
-        Process.Start(startInfo);
-
-        await Task.CompletedTask;
+        _toastService.ShowWarning("Cannot export, it's a demo.");
     }
 }

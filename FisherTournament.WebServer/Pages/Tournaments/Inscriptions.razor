@@ -13,14 +13,13 @@
 
 <FluentGrid>
     <FluentGridItem sm="12" md="6">
-        <h1 class="page-title-no-pt">Inscripciones</h1>
+        <h1 class="page-title-no-pt">Inscriptions</h1>
     </FluentGridItem>
 
     <FluentGridItem sm="12" md="6" Class="flex justify-end">
-        <FluentButton
-            Appearance="Appearance.Accent" 
-            IconStart="@(new Icons.Regular.Size16.Add())"
-            OnClick="@(() => _nav.NavigateTo($"/tournament/{TournamentId}/add/inscription"))">Agregar Inscripción</FluentButton>
+        <FluentButton Appearance="Appearance.Accent"
+                      IconStart="@(new Icons.Regular.Size16.Add())"
+                      OnClick="@(() => _nav.NavigateTo($"/tournament/{TournamentId}/add/inscription"))">Add Inscription</FluentButton>
     </FluentGridItem>
 </FluentGrid>
 
@@ -32,32 +31,30 @@
                       OptionText="@(i => i.Name)"
                       OptionValue="@(i => i.Id)">
             <LabelTemplate>
-                Filtrar por categoría
+                Filter by category
             </LabelTemplate>
         </FluentSelect>
     </div>
 </div>
 
 <FluentDataGrid @ref="_searchFluentDataGrid"
-                TGridItem="GetTournamentInscriptionsQueryResult" 
-                Pagination="@_searchPagination" 
-                ItemsProvider="_searchItemsProviderCall" 
+                TGridItem="GetTournamentInscriptionsQueryResult"
+                Pagination="@_searchPagination"
+                ItemsProvider="_searchItemsProviderCall"
                 GridTemplateColumns="0.1fr 0.3fr 0.4fr 0.3fr 0.4fr">
     <ChildContent>
         <PropertyColumn Title="N°" Property="@(c => c.Number)" />
 
         <PropertyColumn Title="DNI" Property="@(c => c.FisherDNI)" />
 
-        <PropertyColumn Title="Nombre" Property="@(c => c.FisherName)" />
+        <PropertyColumn Title="Name" Property="@(c => c.FisherName)" />
 
-        <PropertyColumn Title="Categoría" Property="@(c => c.CategoryName)" />
+        <PropertyColumn Title="Category" Property="@(c => c.CategoryName)" />
 
-        <TemplateColumn Title="Acciones" Align="@Align.End">
-            <FluentButton 
-                          IconEnd="@(new Icons.Regular.Size24.Edit())"
+        <TemplateColumn Title="Actions" Align="@Align.End">
+            <FluentButton IconEnd="@(new Icons.Regular.Size24.Edit())"
                           OnClick="@(() => Edit(context))" />
-            <FluentButton 
-                          IconEnd="@(new Icons.Regular.Size24.Delete().WithColor("red"))"
+            <FluentButton IconEnd="@(new Icons.Regular.Size24.Delete().WithColor("red"))"
                           OnClick="@(() => Delete(context))" />
         </TemplateColumn>
     </ChildContent>
@@ -65,7 +62,7 @@
     <EmptyContent>
         <div Style="min-height: 300px;" class="flex items-center empty-content">
             <FluentIcon Icon="Icons.Regular.Size24.Warning" Color="@Color.Accent" />
-            &nbsp; Todavía no hay inscripciones.
+            &nbsp; There are no inscriptions yet.
         </div>
     </EmptyContent>
 </FluentDataGrid>
@@ -91,13 +88,12 @@
         if (categoriesRes.IsError)
         {
             _toastService.ShowErrors(categoriesRes.Errors);
-        }
-        else
+        } else
         {
             _categories = categoriesRes.Value.ToList();
         }
 
-        _categories.Add(new GetTournamentCategoriesQueryResult { Id = "all", Name = "Todas" });
+        _categories.Add(new GetTournamentCategoriesQueryResult { Id = "all", Name = "All" });
 
         _searchItemsProviderCall = async req =>
         {
@@ -129,23 +125,24 @@
     async Task Delete(GetTournamentInscriptionsQueryResult inc)
     {
         var dialog = await _dialogService.ShowConfirmationAsync(
-            $"Eliminar la inscripción de {inc.FisherName} en la categoría {inc.CategoryName}?",
-            "Si", "No",
-            "Confirmar"
+            $"Delete the inscription of {inc.FisherName} in the category {inc.CategoryName}?",
+            "Yes", "No",
+            "Confirm"
         );
         var result = await dialog.Result;
-        if (!result.Cancelled){
+        if (!result.Cancelled)
+        {
             var command = new RemoveInscriptionCommand(TournamentId, inc.FisherId);
             var res = await _sender.Send(command);
 
             if (res.IsError)
-			{
-				_toastService.ShowErrors(res.Errors);
-				return;
-			}
+            {
+                _toastService.ShowErrors(res.Errors);
+                return;
+            }
 
-            _toastService.ShowSuccess($"Eliminada inscripción {inc.Number}");    
-            
+            _toastService.ShowSuccess($"Inscription {inc.Number} removed");
+
             await Search();
         }
     }
