@@ -15,6 +15,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Update="wwwroot\css\site.css" CopyToPublishDirectory="Never" />
+    <Content Update="wwwroot\css\site.output.css" CopyToPublishDirectory="Never" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Content Remove="Shared\CenteredSectionSeparator.razor" />
     <Content Remove="Shared\ScrollerGoToCompetition.razor" />
   </ItemGroup>
@@ -58,4 +63,20 @@
   <ItemGroup>
     <UpToDateCheckInput Remove="Shared\CenteredSectionSeparator.razor" />
   </ItemGroup>
+
+  <Target Name="RemoveMonacoAfterPublish" AfterTargets="AfterPublish">
+     <PropertyGroup>
+         <MonacoEditorPath>$(TargetDir)wwwroot\_content\Microsoft.Fast.Components.FluentUI\lib\monaco-editor</MonacoEditorPath>
+     </PropertyGroup>
+     
+     <ItemGroup>
+          <DirsToClean Include="$(MonacoEditorPath)" />
+     </ItemGroup>
+
+     <Error Condition="!Exists('$(MonacoEditorPath)')" Text="The Monaco Editor directory does not exist! Either delete this rule if the folder is skipped or fix your publish path. Expected path is $(MonacoEditorPath)" />
+
+     <Message Text="Removing monaco editor since library's author doesn't allow to avoid it from publish. At dir $(MonacoEditorPath)" Importance="high"/>
+    
+     <RemoveDir Directories="@(DirsToClean)" />
+  </Target>
 </Project>

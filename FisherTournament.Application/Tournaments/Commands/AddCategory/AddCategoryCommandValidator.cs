@@ -7,7 +7,7 @@ namespace FisherTournament.Application.Tournaments.Commands.AddCategory
 		public AddCategoryCommandValidator()
 		{
 			RuleFor(c => c.TournamentId).NotEmpty();
-			RuleFor(c => c.Name).NotEmpty();
+			RuleFor(c => c.Name).MaximumLength(75).NotEmpty();
 		}
 	}
 }

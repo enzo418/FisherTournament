@@ -14,7 +14,7 @@ public class CloneTournamentCommandValidator : AbstractValidator<CloneTournament
 		RuleFor(c => c.NewTournamentStartDate)
 			.IsUtcDateTime();
 
-		RuleFor(c => c.NewTournamentName)
+		RuleFor(c => c.NewTournamentName).MaximumLength(75)
 			.NotEmpty();
 	}
 }

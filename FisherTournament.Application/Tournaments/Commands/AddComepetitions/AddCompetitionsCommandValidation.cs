@@ -1,3 +1,4 @@
+using FisherTournament.Application.Common.Resources;
 using FisherTournament.Application.Common.Validators;
 using FluentValidation;
 
@@ -5,10 +6,13 @@ namespace FisherTournament.Application.Tournaments.Commands.AddCompetitions;
 
 public class CompetitionCommandValidation : AbstractValidator<AddCompetitionCommand>
 {
-	public CompetitionCommandValidation()
+	public CompetitionCommandValidation(CompetitionLocationResourceValidation locationValidator)
 	{
 		RuleFor(c => c.StartDateTime)
 			.IsUtcDateTime();
+
+		RuleFor(c => c.Location)
+			.SetValidator(locationValidator);
 	}
 }
 

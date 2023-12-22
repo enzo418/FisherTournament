@@ -28,6 +28,8 @@ public static partial class DependencyInjection
 
         services.AddScoped(typeof(IPipelineBehavior<,>), typeof(ErrorOrBasedValidationBehavior<,>));
 
+        services.AddScoped(typeof(IPipelineBehavior<,>), typeof(LimitCallAmountBehavior<,>));
+
         services.AddSingleton<ApplicationInstrumentation>();
 
         StopIfUsingInvalidTypes();
