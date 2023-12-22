@@ -14,7 +14,7 @@ namespace FisherTournament.UnitTests.Tournaments.Commands.AddCompetitions
         {
             _dateTimeProvider = new Mock<IDateTimeProvider>();
             _dateTimeProvider.Setup(d => d.Now).Returns(DateTime.UtcNow);
-            _validator = new AddCompetitionsCommandValidation(new CompetitionCommandValidation());
+            _validator = new AddCompetitionsCommandValidation(new CompetitionCommandValidation(new CompetitionLocationResourceValidation()));
         }
 
         [Fact]
