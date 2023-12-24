@@ -1,11 +1,16 @@
 # Project Fishing Tournament
 
+## DEMO
+This project has all the basic features of the real fishing tournament application.
+It's deployed in Azure and you can test it in the following link:
+[https://demo-fishingapp.azurewebsites.net/](https://demo-fishingapp.azurewebsites.net/)
+
 ## Docs
 1. [Introduction](Docs/1_introduction.md)
 2. [Implementation](Docs/2_implementation.md)
 
 ## Optimizations
-- [**Leader board update**](Docs/optimizing_leaderboard.md)
+- [Leader board update](Docs/optimizing_leaderboard.md)
 
 ## Structure
     
